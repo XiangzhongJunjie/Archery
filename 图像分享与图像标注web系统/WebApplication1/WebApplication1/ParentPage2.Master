@@ -1,0 +1,46 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="ParentPage2.master.cs" Inherits="WebApplication1.ParentPage2" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style type="text/css">
+        .auto-style1 {
+            width: 100%;
+            background-color: #C0C0C0;
+        }
+        .auto-style2 {
+            height: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <table class="auto-style1">
+                <tr>
+                    <td class="auto-style2">
+                        <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Login.aspx">登录页</asp:HyperLink>
+                    </td>
+                    <td class="auto-style2">
+                        <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Writerview.aspx">图片查看</asp:HyperLink>
+                    </td>
+                    <td class="auto-style2">
+                        <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/image_comment.aspx">图片标注</asp:HyperLink>
+                    </td>
+                </tr>
+            </table>
+            <div class="row" style ="height:150px">
+
+            </div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
