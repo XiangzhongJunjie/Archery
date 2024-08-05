@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title >第十六章</title>
+</head>
+<body>
+    <header style = "text-align: center; font-size: large;">第十六章</header>
+    <div style = "margin-left: 20%; margin-right: 20%; text-align: left;">
+        <a><strong>1.在Eclipse中如何创建基于Maven的Java Project，并把它修改为Maven Web应用？</strong></a>
+        <p style="text-indent: 2em;">
+            1. 打开Eclipse，点击 "File" > "New" > "Maven Project"。<br>
+        </p>
+        <p style="text-indent: 2em;">
+            2. 在 "Create a Maven Project" 对话框中，选择 "Empty" 模板，然后点击 "Next"。
+        </p>
+        <p style="text-indent: 2em;">
+            3. 输入groupId、artifactId和version，分别代表项目的组ID、项目ID和项目版本。例如：com.example，example，1.0-SNAPSHOT。
+        </p>
+        <p style="text-indent: 2em;">
+            4. 选择一个保存路径，然后点击 "Finish"。
+        <p>
+        <p style="text-indent: 2em;">
+            5. Eclipse会自动为项目生成pom.xml文件。在该项目上右键，选择 "Run As" > "Maven Install"。这将在本地Maven仓库中安装项目依赖。
+        </p>
+        <p style="text-indent: 2em;">
+            6. 为了将项目修改为Maven Web应用，我们需要在pom.xml中添加以下依赖：<br>
+
+            ```xml<br>
+            <dependencies>
+                <!-- 添加Web依赖 --><br>
+                <dependency>
+                    <groupId>org.springframework</groupId><br>
+                    <artifactId>spring-web</artifactId><br>
+                    <version>5.3.10</version><br>
+                </dependency><br>
+                <!-- 添加Tomcat依赖 --><br>
+                <dependency><br>
+                    <groupId>org.apache.tomcat</groupId><br>
+                    <artifactId>tomcat-embed-core</artifactId><br>
+                    <version>9.0.46</version><br>
+                </dependency><br>
+            </dependencies><br>
+            ```<br>
+
+        </p>
+        <p style="text-indent: 2em;">
+            7. 在项目的src/main/java目录下，创建一个名为`WebAppConfig.java`的文件，用于配置Spring和Tomcat。<br>
+
+            ```java<br>
+            package com.example;<br>
+
+            import org.springframework.context.annotation.Configuration;<br>
+            import org.springframework.web.servlet.config.annotation.EnableWebMvc;<br>
+            import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;<br>
+            import org.apache.tomcat.embed.TomcatServletWebServerFactory;<br>
+            import org.apache.tomcat.util.descriptor.WebListener;<br>
+
+            @Configuration<br>
+            @EnableWebMvc<br>
+            public class WebAppConfig implements WebMvcConfigurer {<br>
+
+            @Override
+            public void addWebMvcConfigurers(WebMvcConfigurer[] configurers) {<br>
+            // 配置Spring MVC<br>
+            configurers[0].addViewResolvers(new DefaultErrorViewResolver());<br>
+            }<br>
+
+            @Bean<br>
+            public TomcatServletWebServerFactory tomcatFactory() {<br>
+            TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();<br>
+            factory.addServerLifecycleBean(new WebListener());<br>
+            return factory;<br>
+            }<br>
+            }<br>
+            ```<br>
+
+        </p>
+        <p style="text-indent: 2em;">
+            8. 创建一个控制器类，例如`HelloController.java`，并在其中添加一个简单的RESTful API。<br>
+
+            ```java<br>
+            package com.example;<br>
+
+            import org.springframework.web.bind.annotation.GetMapping;<br>
+            import org.springframework.web.bind.annotation.RequestParam;<br>
+            import org.springframework.web.bind.annotation.RestController;<br>
+
+            @RestController<br>
+            public class HelloController {<br>
+
+            @GetMapping("/hello")<br>
+            public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {<br>
+            return "Hello, " + name + "!";<br>
+            }<br>
+            }<br>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">
+            9. 运行项目，Eclipse会自动启动内嵌的Tomcat。在浏览器中访问`http://localhost:8080/hello`，你应该能看到返回的消息。
+        </p>
+        <p style="text-indent: 2em;">
+            10. 至此，你已经成功创建了一个基于Maven的Java Project，并将其修改为Maven Web应用。
+        </p>
+        <a><strong>2.Spring MVC配置文件一般有哪些内容？有什么含义？</strong></a>
+        <p style="text-indent: 2em;">
+            Spring MVC配置文件主要包含以下几个部分，每个部分都有其特定的含义：<br>
+
+            1. beans：用于定义Spring容器中的各种Bean，包括Java对象、组件和服务的实例化、配置以及依赖关系。<br>
+
+            2. aop：用于配置AspectJ的面向切面编程（AOP）支持，包括定义切面、增强和方法拦截器等。<br>
+
+            3. c：用于配置应用程序的上下文（Context），包括国际化（i18n）支持、事件监听器、资源加载等。<br>
+
+            4. cache：用于配置缓存系统，包括缓存管理器和缓存策略等。<br>
+
+            5. context：用于配置Web应用程序的上下文，包括请求、响应、视图解析器、控制器等。<br>
+
+            6. jdbc：用于配置JDBC数据源、事务管理器和映射器等。<br>
+
+            7. jee：用于配置企业级特性，如JNDI、EJB和JMS等。<br>
+
+            8. lang：用于配置国际化（i18n）支持，包括消息源和语言绑定等。<br>
+
+            9. mvc：用于配置Spring MVC框架，包括视图解析器、控制器、表单验证等。<br>
+
+            10. p：用于配置应用程序的属性，如数据源、事务管理等。<br>
+
+            11. task：用于配置任务调度器，包括任务和任务执行器等。<br>
+
+            12. tx：用于配置事务管理器和服务访问器等。<br>
+
+            13. util：用于配置一些实用工具类，如日志、编码和解码等。<br>
+        </p>
+        <a><strong>3.如何使用监听器来统计在线用户信息？请编程加以说明</strong></a>
+        <a href = "JSP/Listener/usersOnline.jsp">点击查看</a>
+    </div>
+</body>

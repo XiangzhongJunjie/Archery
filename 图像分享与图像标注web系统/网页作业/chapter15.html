@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title >第十五章</title>
+</head>
+<body>
+    <header style = "text-align: center; font-size: large;">第十五章</header>
+    <div style = "margin-left: 20%; margin-right: 20%; text-align: left;">
+        <a><strong>1.如何理解Spring的依赖注入和控制反转？</strong></a>
+        <p style="text-indent: 2em;">依赖注入（Dependency Injection，简称DI）和控制反转（Inversion of Control，简称IoC）是Spring框架中的两个核心概念，它们旨在简化对象之间的依赖关系，提高代码的可维护性和可扩展性。<br>
+        </p>
+        <p style="text-indent: 2em;">(1). 依赖注入（DI）：在运行期间，外部容器将依赖对象注入到需要它们的组件中。这意味着组件不需要直接创建和管理它们所依赖的其他对象，而是通过外部容器来提供。这样做的好处是解耦各个组件，降低对象之间的耦合度，提高代码的可测试性和可维护性。<br>
+
+            (2). 控制反转（IoC）：将组件对象的创建和管理权从程序代码本身转移到外部容器。这样做的好处是将对象的创建和依赖关系从代码中分离出来，使得程序员更专注于业务逻辑的实现，同时便于后续的代码重构和扩展。<br>
+
+            依赖注入和控制反转在Spring框架中起到了解耦和简化对象依赖关系的作用，有助于提高代码的可维护性和可扩展性。<br>
+        </p>
+        <br>
+        <a><strong>2.什么是设值注入？什么是构造注入？请编程加以说明。</strong></a>
+        <p style="text-indent: 2em;">设值注入（Setter Injection）和构造注入（Constructor Injection）是两种常见的依赖注入方法，它们在面向对象编程中广泛使用，尤其在一些框架（如Spring）中。<br>
+        </p>
+        <p style="text-indent: 2em;">(1). 设值注入：
+            设值注入是通过在类的属性上添加setter方法来实现依赖注入。这种方式将依赖关系的建立推迟到了实例化对象之后。设值注入的优点是可以在运行时动态地更改依赖关系，提高了代码的灵活性。但缺点是可能导致代码逻辑变得复杂，不易维护。<br>
+
+            示例（Java）：<br>
+
+            ```java<br>
+            public class MyClass {<br>
+            private final Dependency dependency;<br>
+
+            public MyClass(Dependency dependency) {<br>
+            this.dependency = dependency;<br>
+            }<br>
+
+            public void setDependency(Dependency dependency) {<br>
+            this.dependency = dependency;<br>
+            }<br>
+
+            public void doSomething() {<br>
+            dependency.performTask();<br>
+            }<br>
+            }<br>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">(2). 构造注入：<br>
+            构造注入是通过在类的构造函数中传入依赖对象来实现依赖注入。这种方式在实例化对象时就已经确定了依赖关系，使得代码逻辑更加清晰。构造注入的优点是依赖关系更加明确，易于维护。缺点是无法在运行时动态地更改依赖关系，可能导致代码变得僵化。<br>
+
+            示例（Java）：<br>
+
+            ```java<br>
+            public class MyClass {<br>
+            private final Dependency dependency;<br>
+
+            public MyClass(Dependency dependency) {<br>
+            this.dependency = dependency;<br>
+            }
+
+            public void doSomething() {<br>
+            dependency.performTask();<br>
+            }<br>
+            }<br>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">设值注入和构造注入都是实现依赖注入的方法，它们各有优缺点。在实际开发中，可以根据项目需求和团队偏好选择合适的方法。</p>
+        <br>
+        <a><strong>3.Spring的AOP是什么？请编程加以说明。</strong></a>
+        <p style="text-indent: 2em;">
+            Spring的AOP（面向切面编程）是一种在不修改原有代码的情况下，为程序添加新功能或修改现有功能的编程技术。Spring AOP通过代理实现了对目标方法的增强，包括前置通知、后置通知、异常处理等。
+        </p>
+        <p style="text-indent: 2em;">以下是一个简单的Spring AOP实例：</p>
+        <p style="text-indent: 2em;">(1). 首先，在pom.xml文件中添加aspectj的依赖：<br>
+
+            ```xml<br>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>5.3.10</version>
+            </dependency>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">(2). 创建一个切面类（LogAspect）：<br>
+
+            ```java<br>
+            package com.example;<br>
+
+            import org.aspectj.lang.JoinPoint;<br>
+            import org.aspectj.lang.annotation.Aspect;<br>
+            import org.aspectj.lang.annotation.Before;<br>
+            import org.aspectj.lang.annotation.Pointcut;<br>
+            import org.springframework.stereotype.Component;<br>
+
+            @Aspect<br>
+            @Component<br>
+            public class LogAspect {<br>
+
+            @Pointcut("execution(* com.example.dao.*.*(..))")<br>
+            public void pointCut() {<br>
+            }<br>
+
+            @Before("pointCut()")<br>
+            public void doBefore(JoinPoint joinPoint) {<br>
+            Date date = new Date(System.currentTimeMillis());<br>
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");<br>
+            String format = sdf.format(date);<br>
+            System.out.println("开始时间:" + format);<br>
+            System.out.println("执行的方法：" + joinPoint.getSignature().getName());<br>
+            System.out.println("获取joinPoint的类实例：" + joinPoint.getClass().getName());<br>
+            System.out.println("执行时传递的参数：" + Arrays.toString(joinPoint.getArgs()));<br>
+            }<br>
+            }<br>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">(3). 在applicationContext.xml中配置Spring AOP：<br>
+
+            ```xml<br>
+            <beans xmlns="http://www.springframework.org/schema/beans"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:aop="http://www.springframework.org/schema/aop"
+                   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+                <aop:aspectj-autoproxy/>
+
+                <bean id="logAspect" class="com.example.LogAspect"/>
+
+                <!-- 配置业务类 -->
+                <bean id="userService" class="com.example.UserService">
+                    <property name="userDao" ref="userDao"/>
+                </bean>
+
+                <bean id="userDao" class="com.example.UserDao"/>
+
+            </beans>
+            ```
+        </p>
+        <p style="text-indent: 2em;">(4). 创建一个业务类（UserService）：<br>
+
+            ```java<br>
+            package com.example;<br>
+
+            import org.springframework.stereotype.Service;<br>
+
+            @Service<br>
+            public class UserService {<br>
+
+            private UserDao userDao;<br>
+
+            public UserService() {<br>
+            }<br>
+
+            public UserDao getUserDao() {<br>
+            return userDao;<br>
+            }<br>
+
+            public void setUserDao(UserDao userDao) {<br>
+            this.userDao = userDao;<br>
+            }<br>
+
+            public void addUser() {<br>
+            userDao.addUser();<br>
+            }<br>
+            }<br>
+            ```<br>
+
+        </p>
+        <p style="text-indent: 2em;">(5). 创建一个数据访问对象（UserDao）：<br>
+
+            ```java<br>
+            package com.example;<br>
+
+            public class UserDao {<br>
+
+            public void addUser() {<br>
+            System.out.println("执行添加用户操作");<br>
+            }<br>
+            }<br>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">(6). 最后，创建一个主类来测试Spring AOP：<br>
+
+            ```java<br>
+            package com.example;<br>
+
+            import org.springframework.context.ApplicationContext;<br>
+            import org.springframework.context.support.ClassPathXmlApplicationContext;<br>
+
+            public class Main {<br>
+        </p>
+        <br>
+    </div>
+</body>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title >第十四章</title>
+</head>
+
+<header style = "text-align: center; font-size: large;">第十四章</header>
+<br>
+<body>
+    <div style = "margin-left: 20%; margin-right: 20%; text-align: left;">
+        <a><strong>1.什么是JNDI数据源？为什么要使用JNDI数据源？</strong></a>
+        <p style = "text-indent: 2em;">
+            JNDI（Java Naming and Directory Interface）数据源是Java中一种用于访问数据源的技术规范。它允许应用程序通过名称或目录服务来查找和访问数据源，从而实现数据连接。<br>
+        </p>
+        <p style="text-indent: 2em;">
+            使用JNDI数据源的原因有以下几点：<br>
+        </p>
+        <p style="text-indent: 2em;">1. 解耦：JNDI数据源将数据源的配置和管理与应用程序分离，使得数据源的发布、管理和维护更加独立于应用程序。<br>
+
+            2. 灵活性：通过JNDI，可以在运行时动态地更改数据源，无需修改应用程序代码。<br>
+
+            3. 易于管理：JNDI数据源可以通过统一的命名和目录服务进行集中管理，方便管理员对数据源进行配置、监控和维护。<br>
+
+            4. 高效：JNDI数据源可以实现连接池，提高数据库连接的复用率，降低系统资源消耗。<br>
+
+            5. 安全性：JNDI数据源可以实现对数据源的访问控制，提高数据安全性。<br>
+
+            JNDI数据源是一种方便、高效、安全的数据连接技术，适用于Java应用程序。<br>
+        </p>
+        <a><strong>2.如何使用MyBatis编写服务器端接口（或Mobile API）？试编程说明。</strong></a>
+        <p style="text-indent: 2em;">
+            使用MyBatis编写服务器端接口（或Mobile API）的主要步骤如下：</p>
+        <p style="text-indent: 2em;">1. 创建数据库表和实体类：首先，根据需求创建数据库表，然后创建对应的实体类。<br>
+
+            2. 配置MyBatis：创建MyBatis的配置文件，包括数据源、事务管理等设置。<br>
+
+            3. 编写Mapper接口：根据数据库表编写Mapper接口，定义接口方法，用于与数据库进行交互。<br>
+
+            4. 编写Mapper XML文件：为每个Mapper接口编写对应的XML文件，定义SQL语句和结果映射。<br>
+
+            5. 编写Service层：编写Service层代码，调用Mapper接口方法进行数据库操作。<br>
+
+            6. 编写Controller层：编写Controller层代码，处理客户端请求，调用Service层进行业务处理。<br>
+        </p>
+        <p style="text-indent: 2em;">
+            以下是一个简单的示例：<br>
+        </p>
+        <p style="text-indent: 2em;">
+            **1. 创建数据库表和实体类：**<br>
+
+            ```sql<br>
+            CREATE TABLE `user` (<br>
+            `id` int(11) NOT NULL AUTO_INCREMENT,<br>
+            `username` varchar(255) NOT NULL，<br>
+            `password` varchar(255) NOT NULL，<br>
+            PRIMARY KEY (`id`)<br>
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;<br>
+            ```<br>
+
+            创建User实体类：<br>
+
+            ```java<br>
+            public class User {<br>
+            private int id;<br>
+            private String username;<br>
+            private String password;<br>
+
+            // getter and setter methods<br>
+            }<br>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">
+            **2. 配置MyBatis：**<br>
+
+            创建mybatis-config.xml：<br>
+
+            ```xml<br>
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+            <configuration>
+                <environments default="development">
+                    <environment id="development">
+                        <transactionManager type="JDBC"/>
+                        <dataSource type="POOLED">
+                            <property name="driver" value="com.mysql.jdbc.Driver"/>
+                            <property name="url" value="jdbc:mysql://localhost:3306/test"/>
+                            <property name="username" value="root"/>
+                            <property name="password" value="password"/>
+                        </dataSource>
+                    </environment>
+                </environments>
+                <mappers>
+                    <mapper resource="com/example/mapper/UserMapper.xml"/>
+                </mappers>
+            </configuration>
+            ```<br>
+
+        </p>
+        <p style="text-indent: 2em;">
+            **3. 编写Mapper接口：**<br>
+
+            创建UserMapper.java：<br>
+
+            ```java<br>
+            package com.example.mapper;<br>
+
+            import com.example.model.User;<br>
+
+            public interface UserMapper {<br>
+            User getUserById(int id);<br>
+            List<User> getAllUsers();<br>
+            int insertUser(User user);<br>
+            int updateUser(User user);<br>
+            int deleteUser(int id);<br>
+            }<br>
+            ```<br>
+        </p>
+        <p style="text-indent: 2em;">
+            编写UserMapper.xml：<br>
+
+            ```xml<br>
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+            <mapper namespace="com.example.mapper.UserMapper">
+                <resultMap id="UserResultMap" type="com.example.model.User">
+                    <id property="id" column="id"/>
+                    <result property="username" column="username"/>
+                    <result property="password" column="password"/>
+                </resultMap>
+
+                <select id="getUserById" resultMap="UserResultMap">
+                    SELECT * FROM user WHERE id = #{id}<br>
+                </select>
+
+                <select id="getAllUsers" resultMap="UserResultMap">
+                    SELECT * FROM user<br>
+                </select>
+
+                <insert id="insertUser" parameterType="com.example.model.User">
+                    INSERT INTO user (username, password) VALUES (#{username}, #{password})<br>
+                </insert>
+
+                <update id="updateUser" parameterType="com.example.model.User">
+        </p>
+    </div>
+</body>
